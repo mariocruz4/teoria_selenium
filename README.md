@@ -2,10 +2,10 @@
 
 En este pequeño repositorio subiré las pruebas que iré haciendo para entender la teoría de Selenium en TripleTen.
 
-## Condisderaciones
+## Consideraciones
 Para que funcione es necesario crear un archivo *configuration.py*
 Dentro del archivo agregar las siguientes dos variables:
-email = ("El correo eléctronico que usaste para registrarte en la página")
+email = ("El correo electronic que usaste para registrarte en la página")
 password = ("La contraseña que utilizaste")
 **NO COPIES Y PEGUES**
 
