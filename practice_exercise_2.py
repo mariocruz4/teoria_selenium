@@ -2,11 +2,20 @@ import time
 import random
 import configuration
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
-driver = webdriver.Chrome()
+chrome_options = Options()
+chrome_options.add_argument("--incognito")
+chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+chrome_options.add_experimental_option("prefs", {
+    "credentials_enable_service": False,
+    "profile.password_manager_enabled": False,
+})
+driver = webdriver.Chrome(options=chrome_options)
+driver.maximize_window()
 driver.get("https://around-v1.nm.tripleten-services.com/signin?lng=es")
 
 # Iniciar sesión
@@ -20,7 +29,7 @@ driver.implicitly_wait(10)
 
 # Guardar el título de la tarjeta más reciente
 title_before = driver.find_element(By.XPATH, "//li[@class='places__item card']//h2[@class='card__title']").text
-print(title_before)
+
 # Hacer clic en el botón que publica una nueva tarjeta
 driver.find_element(By.CLASS_NAME, "profile__add-button").click()
 
@@ -35,7 +44,7 @@ driver.find_element(By.NAME, "link").send_keys("https://practicum-content.s3.us-
 driver.find_element(By.XPATH, ".//form[@name='new-card']/button[text()='Guardar']").click()
 
 # Esperar a que aparezca el botón Eliminar
-WebDriverWait(driver, 5).until(expected_conditions.visibility_of_element_located((By.XPATH, ".//button[@class='card__delete-button card__delete-button_visible']")))
+WebDriverWait(driver, 5).until(expected_conditions.visibility_of_element_located((By.XPATH, "//li[@class='places__item card'][1]/button[@class='card__delete-button card__delete-button_visible']")))
 
 # Comprobar que la tarjeta tiene el título correcto
 title_after = driver.find_element(By.XPATH, "//li[@class='places__item card']//h2[@class='card__title']")
@@ -49,11 +58,11 @@ cards_before = len(driver.find_elements(By.XPATH, "//li[@class='places__item car
 driver.find_element(By.XPATH, "//li[@class='places__item card'][1]/button[@class='card__delete-button card__delete-button_visible']").click()
 
 # Esperar a que el título de la tarjeta más reciente sea igual a title_before
-#WebDriverWait(driver, 10).until(expected_conditions.text_to_be_present_in_element( (By.XPATH, "//li[@class='places__item card']//h2[@class='card__title']"), title_before))
+WebDriverWait(driver, 5).until(expected_conditions.text_to_be_present_in_element( (By.XPATH, "//li[@class='places__item card']//h2[@class='card__title']"), title_before))
 
 # Comprobar que ahora hay una tarjeta menos
-#cards_after = len(driver.find_elements(By.XPATH, "//li[@class='places__item card']"))
+cards_after = len(driver.find_elements(By.XPATH, "//li[@class='places__item card']"))
 
-#assert cards_before != cards_after
+assert cards_before - cards_after == 1
 
-#driver.quit()
+driver.quit()
