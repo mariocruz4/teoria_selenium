@@ -11,7 +11,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 driver = webdriver.Chrome()
 driver.get("https://around-v1.nm.tripleten-services.com/signin?lng=es")
 
-time.sleep(5)
+time.sleep(3)
 
 # Buscar el campo Correo electrónico y rellenarlo
 WebDriverWait(driver, 5).until(expected_conditions.visibility_of_element_located((By.ID, "email")))
@@ -31,6 +31,7 @@ element = driver.find_element(By.TAG_NAME, "footer")
 
 # Desplazar el pie de página a la vista
 driver.execute_script("arguments[0].scrollIntoView();", element)
+time.sleep(3)
 
 # Comprobar que el pie de página contiene el string 'Around'
 assert "Around" in element.text
